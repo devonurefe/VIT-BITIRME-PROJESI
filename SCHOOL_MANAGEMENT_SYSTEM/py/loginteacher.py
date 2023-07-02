@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'loginteacher.ui'
+# Form implementation generated from reading ui file 'student.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -11,137 +11,178 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_TeacherWindow(object):
-    def setupUi(self, TeacherWindow):
-        TeacherWindow.setObjectName("TeacherWindow")
-        TeacherWindow.resize(800, 600)
-        TeacherWindow.setMinimumSize(QtCore.QSize(800, 600))
-        TeacherWindow.setMaximumSize(QtCore.QSize(800, 600))
-        TeacherWindow.setStyleSheet("")
-        self.centralwidget = QtWidgets.QWidget(TeacherWindow)
+class Ui_StudentWindow(object):
+    def setupUi(self, StudentWindow):
+        StudentWindow.setObjectName("StudentWindow")
+        StudentWindow.resize(800, 600)
+        StudentWindow.setMinimumSize(QtCore.QSize(800, 600))
+        StudentWindow.setMaximumSize(QtCore.QSize(800, 600))
+        self.centralwidget = QtWidgets.QWidget(StudentWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.tloginbutton = QtWidgets.QPushButton(self.centralwidget)
-        self.tloginbutton.setGeometry(QtCore.QRect(320, 330, 171, 28))
-        font = QtGui.QFont()
-        font.setPointSize(8)
-        self.tloginbutton.setFont(font)
-        self.tloginbutton.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
-        self.tloginbutton.setObjectName("tloginbutton")
-        self.usernameline = QtWidgets.QLineEdit(self.centralwidget)
-        self.usernameline.setGeometry(QtCore.QRect(270, 200, 271, 31))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.usernameline.setFont(font)
-        self.usernameline.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
-        self.usernameline.setObjectName("usernameline")
-        self.tpasswordline = QtWidgets.QLineEdit(self.centralwidget)
-        self.tpasswordline.setGeometry(QtCore.QRect(270, 260, 271, 31))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.tpasswordline.setFont(font)
-        self.tpasswordline.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
-        self.tpasswordline.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.tpasswordline.setObjectName("tpasswordline")
-        self.tbackbutton = QtWidgets.QPushButton(self.centralwidget)
-        self.tbackbutton.setGeometry(QtCore.QRect(320, 380, 171, 28))
-        self.tbackbutton.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
-        self.tbackbutton.setObjectName("tbackbutton")
-        self.message = QtWidgets.QLabel(self.centralwidget)
-        self.message.setGeometry(QtCore.QRect(170, 300, 460, 20))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.message.setFont(font)
-        self.message.setStyleSheet("color:  rgb(143, 106, 185);")
-        self.message.setText("")
-        self.message.setAlignment(QtCore.Qt.AlignCenter)
-        self.message.setObjectName("message")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(0, 0, 800, 600))
-        self.label.setStyleSheet("background-color: rgb(172, 223, 230);")
+        self.label.setGeometry(QtCore.QRect(0, -30, 800, 600))
+        self.label.setStyleSheet("background-color:rgb(172, 223, 230);")
         self.label.setText("")
         self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(200, 60, 400, 91))
+        self.Student_information = QtWidgets.QGroupBox(self.centralwidget)
+        self.Student_information.setGeometry(QtCore.QRect(0, 0, 800, 600))
+        self.Student_information.setMinimumSize(QtCore.QSize(800, 600))
+        self.Student_information.setMaximumSize(QtCore.QSize(800, 600))
         font = QtGui.QFont()
-        font.setPointSize(25)
+        font.setPointSize(10)
+        self.Student_information.setFont(font)
+        self.Student_information.setStyleSheet("color:  rgb(143, 106, 185);;")
+        self.Student_information.setObjectName("Student_information")
+        self.label_2 = QtWidgets.QLabel(self.Student_information)
+        self.label_2.setGeometry(QtCore.QRect(140, 40, 120, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
         self.label_2.setFont(font)
-        self.label_2.setStyleSheet("color:  rgb(143, 106, 185);")
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(300, 160, 200, 20))
+        self.label_3 = QtWidgets.QLabel(self.Student_information)
+        self.label_3.setGeometry(QtCore.QRect(140, 80, 120, 30))
         font = QtGui.QFont()
-        font.setPointSize(15)
+        font.setPointSize(10)
         self.label_3.setFont(font)
-        self.label_3.setStyleSheet("color:  rgb(143, 106, 185);")
-        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
-        self.label.raise_()
-        self.tloginbutton.raise_()
-        self.usernameline.raise_()
-        self.tpasswordline.raise_()
-        self.tbackbutton.raise_()
-        self.message.raise_()
-        self.label_2.raise_()
-        self.label_3.raise_()
-        TeacherWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(TeacherWindow)
+        self.label_4 = QtWidgets.QLabel(self.Student_information)
+        self.label_4.setGeometry(QtCore.QRect(140, 120, 120, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.label_5 = QtWidgets.QLabel(self.Student_information)
+        self.label_5.setGeometry(QtCore.QRect(140, 160, 120, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_5.setFont(font)
+        self.label_5.setObjectName("label_5")
+        self.label_6 = QtWidgets.QLabel(self.Student_information)
+        self.label_6.setGeometry(QtCore.QRect(140, 200, 120, 30))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_6.setFont(font)
+        self.label_6.setObjectName("label_6")
+        self.number_label = QtWidgets.QLabel(self.Student_information)
+        self.number_label.setGeometry(QtCore.QRect(340, 40, 225, 30))
+        font = QtGui.QFont()
+        font.setPointSize(8)
+        self.number_label.setFont(font)
+        self.number_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
+"color:  rgb(143, 106, 185);")
+        self.number_label.setText("")
+        self.number_label.setObjectName("number_label")
+        self.surname_label = QtWidgets.QLabel(self.Student_information)
+        self.surname_label.setGeometry(QtCore.QRect(340, 120, 225, 30))
+        self.surname_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
+"color:  rgb(143, 106, 185);")
+        self.surname_label.setText("")
+        self.surname_label.setObjectName("surname_label")
+        self.birth_label = QtWidgets.QLabel(self.Student_information)
+        self.birth_label.setGeometry(QtCore.QRect(340, 160, 225, 30))
+        self.birth_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
+"color:  rgb(143, 106, 185);")
+        self.birth_label.setText("")
+        self.birth_label.setObjectName("birth_label")
+        self.gender_label = QtWidgets.QLabel(self.Student_information)
+        self.gender_label.setGeometry(QtCore.QRect(340, 200, 225, 30))
+        self.gender_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
+"color:  rgb(143, 106, 185);")
+        self.gender_label.setText("")
+        self.gender_label.setObjectName("gender_label")
+        self.name_label = QtWidgets.QLabel(self.Student_information)
+        self.name_label.setGeometry(QtCore.QRect(340, 80, 225, 30))
+        self.name_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
+"color:  rgb(143, 106, 185);")
+        self.name_label.setText("")
+        self.name_label.setObjectName("name_label")
+        self.term_widget = QtWidgets.QTableWidget(self.Student_information)
+        self.term_widget.setGeometry(QtCore.QRect(50, 270, 661, 238))
+        self.term_widget.setStyleSheet("background-color: rgb(245, 240, 218);\n"
+"color:  rgb(143, 106, 185);;")
+        self.term_widget.setObjectName("term_widget")
+        self.term_widget.setColumnCount(3)
+        self.term_widget.setRowCount(5)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setVerticalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setVerticalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setVerticalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setVerticalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.term_widget.setHorizontalHeaderItem(2, item)
+        self.term_widget.horizontalHeader().setDefaultSectionSize(197)
+        self.term_widget.verticalHeader().setDefaultSectionSize(41)
+        self.back_button = QtWidgets.QPushButton(self.Student_information)
+        self.back_button.setGeometry(QtCore.QRect(680, 510, 110, 30))
+        self.back_button.setStyleSheet("QPushButton{\n"
+"    background-color: rgb(143, 106, 185);\n"
+"    color: rgb(245, 240, 218);\n"
+"}\n"
+"QPushButton::hover{\n"
+"    background-color: rgb(115, 80, 139);\n"
+"    color: rgb(245, 240, 218);\n"
+"}\n"
+"QPushButton::pressed{\n"
+"    background-color: rgb(81, 65, 108);\n"
+"    padding-left:5px;\n"
+"    color: rgb(245, 240, 218);\n"
+"    padding-top:5px;\n"
+"}")
+        self.back_button.setObjectName("back_button")
+        StudentWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(StudentWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
         self.menubar.setObjectName("menubar")
-        TeacherWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(TeacherWindow)
+        StudentWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(StudentWindow)
         self.statusbar.setObjectName("statusbar")
-        TeacherWindow.setStatusBar(self.statusbar)
+        StudentWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(TeacherWindow)
-        QtCore.QMetaObject.connectSlotsByName(TeacherWindow)
+        self.retranslateUi(StudentWindow)
+        QtCore.QMetaObject.connectSlotsByName(StudentWindow)
 
-    def retranslateUi(self, TeacherWindow):
+    def retranslateUi(self, StudentWindow):
         _translate = QtCore.QCoreApplication.translate
-        TeacherWindow.setWindowTitle(_translate("TeacherWindow", "MainWindow"))
-        self.tloginbutton.setText(_translate("TeacherWindow", "LOGIN"))
-        self.usernameline.setPlaceholderText(_translate("TeacherWindow", "USER NAME"))
-        self.tpasswordline.setPlaceholderText(_translate("TeacherWindow", "PASSWORD"))
-        self.tbackbutton.setText(_translate("TeacherWindow", "BACK"))
-        self.label_2.setText(_translate("TeacherWindow", "TYPING SCHOOL"))
-        self.label_3.setText(_translate("TeacherWindow", "TEACHER LOGIN"))
+        StudentWindow.setWindowTitle(_translate("StudentWindow", "Student Info"))
+        self.Student_information.setTitle(_translate("StudentWindow", "Student Information"))
+        self.label_2.setText(_translate("StudentWindow", "Number:"))
+        self.label_3.setText(_translate("StudentWindow", "Name:"))
+        self.label_4.setText(_translate("StudentWindow", "Surname:"))
+        self.label_5.setText(_translate("StudentWindow", "Date of Birth:"))
+        self.label_6.setText(_translate("StudentWindow", "Gender:"))
+        item = self.term_widget.verticalHeaderItem(0)
+        item.setText(_translate("StudentWindow", "Lesson1"))
+        item = self.term_widget.verticalHeaderItem(1)
+        item.setText(_translate("StudentWindow", "Lesson2"))
+        item = self.term_widget.verticalHeaderItem(2)
+        item.setText(_translate("StudentWindow", "Lesson3"))
+        item = self.term_widget.verticalHeaderItem(3)
+        item.setText(_translate("StudentWindow", "Lesson4"))
+        item = self.term_widget.verticalHeaderItem(4)
+        item.setText(_translate("StudentWindow", "Lesson5"))
+        item = self.term_widget.horizontalHeaderItem(0)
+        item.setText(_translate("StudentWindow", "Lesson Name"))
+        item = self.term_widget.horizontalHeaderItem(1)
+        item.setText(_translate("StudentWindow", "Midterm"))
+        item = self.term_widget.horizontalHeaderItem(2)
+        item.setText(_translate("StudentWindow", "Final"))
+        self.back_button.setText(_translate("StudentWindow", "BACK"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    TeacherWindow = QtWidgets.QMainWindow()
-    ui = Ui_TeacherWindow()
-    ui.setupUi(TeacherWindow)
-    TeacherWindow.show()
+    StudentWindow = QtWidgets.QMainWindow()
+    ui = Ui_StudentWindow()
+    ui.setupUi(StudentWindow)
+    StudentWindow.show()
     sys.exit(app.exec_())
