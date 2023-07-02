@@ -9,8 +9,6 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import psycopg2
-from student import Ui_StudentWindow_2
 
 
 class Ui_StudentWindow(object):
@@ -105,9 +103,6 @@ class Ui_StudentWindow(object):
         self.label.setStyleSheet("background-color: rgb(172, 223, 230);")
         self.label.setText("")
         self.label.setObjectName("label")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(80, 200, 93, 28))
-        self.pushButton.setObjectName("pushButton")
         self.label.raise_()
         self.sloginbutton.raise_()
         self.snumberline.raise_()
@@ -116,7 +111,6 @@ class Ui_StudentWindow(object):
         self.message.raise_()
         self.label_2.raise_()
         self.label_3.raise_()
-        self.pushButton.raise_()
         StudentWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(StudentWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
@@ -138,53 +132,8 @@ class Ui_StudentWindow(object):
         self.sbackbutton.setText(_translate("StudentWindow", "BACK"))
         self.label_2.setText(_translate("StudentWindow", "TYPING SCHOOL"))
         self.label_3.setText(_translate("StudentWindow", "STUDENT LOGIN"))
-        self.pushButton.setText(_translate("StudentWindow", "PushButton"))
-#####################################################################3
-        self.sloginbutton.clicked.connect(self.login)
-
-    def login(self):
-        # PostgreSQL bağlantısı için gerekli bilgileri girin
-        host = "localhost"  # PostgreSQL sunucu adresi
-        port = "5432"  # PostgreSQL bağlantı noktası
-        database = "SCHOOL_MANAGEMENT_SYSTEM"  # Veritabanı adı
-        username = "postgres"  # PostgreSQL kullanıcı adı
-        password = "967272"  # PostgreSQL kullanıcı parolası
-        # PostgreSQL veritabanına bağlan
-        conn = psycopg2.connect(
-                host=host,
-                port=port,
-                database=database,
-                user=username,
-                password=password
-                )
 
 
-        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
-        cursor = conn.cursor()
-
-        # SQL sorgusunu hazırla ve çalıştır
-        query = "SELECT * FROM students"
-        cursor.execute(query)
-
-        # Sonuçları al ve print et
-        data = cursor.fetchall()
-        for row in data:
-                print(row)
-        id = self.snumberline.text()
-        password = self.spasswordline.text()
-
-        for i in data:
-             if id == str(i[0]) and password == str(i[3]):
-                  self.ui = Ui_StudentWindow_2()
-                  self.ui.setupUi(StudentWindow)
-                  print("dogru")
-             else:
-                  print('yanlis')
-
-        # Cursor ve bağlantıyı kapat
-        cursor.close()
-        conn.close()
-##############################################################3
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
