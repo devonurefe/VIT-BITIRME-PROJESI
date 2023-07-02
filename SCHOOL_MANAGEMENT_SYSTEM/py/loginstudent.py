@@ -9,7 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import psycopg2
+from student import Ui_StudentWindow_2
 
 class Ui_StudentWindow(object):
     def setupUi(self, StudentWindow):
@@ -132,6 +133,54 @@ class Ui_StudentWindow(object):
         self.sbackbutton.setText(_translate("StudentWindow", "BACK"))
         self.label_2.setText(_translate("StudentWindow", "TYPING SCHOOL"))
         self.label_3.setText(_translate("StudentWindow", "STUDENT LOGIN"))
+
+        # Login student button icin kodlar, database bağlanıtısı
+        self.sloginbutton.clicked.connect(self.login)
+
+
+
+    def login(self):
+        # PostgreSQL bağlantısı için gerekli bilgileri girin
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "school_database"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "2649"  # PostgreSQL kullanıcı parolası
+        # PostgreSQL veritabanına bağlan
+        conn = psycopg2.connect(
+                host=host,
+                port=port,
+                database=database,
+                user=username,
+                password=password
+                )
+
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+
+        # SQL sorgusunu hazırla ve çalıştır
+        query = "SELECT * FROM students"
+        cursor.execute(query)
+
+        # Sonuçları al ve print et
+        data = cursor.fetchall()
+        for row in data:
+                print(row)
+        id = self.snumberline.text()
+        password = self.spasswordline.text()
+
+        for i in data:
+             if id == str(i[0]) and password == str(i[3]):
+                  self.ui = Ui_StudentWindow_2()
+                  self.ui.setupUi(StudentWindow)
+                  print("dogru")
+             else:
+                  print('yanlis')
+
+        # Cursor ve bağlantıyı kapat
+        cursor.close()
+        conn.close()
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_StudentWindow(object):
+class Ui_StudentWindow_2(object):
     def setupUi(self, StudentWindow):
         StudentWindow.setObjectName("StudentWindow")
         StudentWindow.resize(800, 600)
@@ -182,7 +182,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     StudentWindow = QtWidgets.QMainWindow()
-    ui = Ui_StudentWindow()
+    ui = Ui_StudentWindow_2()
     ui.setupUi(StudentWindow)
     StudentWindow.show()
     sys.exit(app.exec_())
