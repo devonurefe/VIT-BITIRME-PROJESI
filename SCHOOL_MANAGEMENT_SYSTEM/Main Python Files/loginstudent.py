@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\Muhammed\OneDrive\Masaüstü\VIT BITIRME PROJESI\SCHOOL_MANAGEMENT_SYSTEM\Ui\loginstudent.ui'
+# Form implementation generated from reading ui file 'loginstudent.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -9,6 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import psycopg2
+from student import Ui_StudentWindow_2
 
 
 class Ui_StudentWindow(object):
@@ -23,19 +25,19 @@ class Ui_StudentWindow(object):
         self.sloginbutton = QtWidgets.QPushButton(self.centralwidget)
         self.sloginbutton.setGeometry(QtCore.QRect(320, 330, 171, 28))
         self.sloginbutton.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
+                                        "    background-color: rgb(143, 106, 185);\n"
+                                        "    color: rgb(245, 240, 218);\n"
+                                        "}\n"
+                                        "QPushButton::hover{\n"
+                                        "    background-color: rgb(115, 80, 139);\n"
+                                        "    color: rgb(245, 240, 218);\n"
+                                        "}\n"
+                                        "QPushButton::pressed{\n"
+                                        "    background-color: rgb(81, 65, 108);\n"
+                                        "    padding-left:5px;\n"
+                                        "    color: rgb(245, 240, 218);\n"
+                                        "    padding-top:5px;\n"
+                                        "}")
         self.sloginbutton.setObjectName("sloginbutton")
         self.snumberline = QtWidgets.QLineEdit(self.centralwidget)
         self.snumberline.setGeometry(QtCore.QRect(270, 200, 271, 31))
@@ -43,7 +45,7 @@ class Ui_StudentWindow(object):
         font.setPointSize(10)
         self.snumberline.setFont(font)
         self.snumberline.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                       "color:  rgb(143, 106, 185);")
         self.snumberline.setObjectName("snumberline")
         self.spasswordline = QtWidgets.QLineEdit(self.centralwidget)
         self.spasswordline.setGeometry(QtCore.QRect(270, 260, 271, 31))
@@ -51,25 +53,25 @@ class Ui_StudentWindow(object):
         font.setPointSize(10)
         self.spasswordline.setFont(font)
         self.spasswordline.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                         "color:  rgb(143, 106, 185);")
         self.spasswordline.setEchoMode(QtWidgets.QLineEdit.Password)
         self.spasswordline.setObjectName("spasswordline")
         self.sbackbutton = QtWidgets.QPushButton(self.centralwidget)
         self.sbackbutton.setGeometry(QtCore.QRect(320, 380, 171, 28))
         self.sbackbutton.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
+                                       "    background-color: rgb(143, 106, 185);\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "}\n"
+                                       "QPushButton::hover{\n"
+                                       "    background-color: rgb(115, 80, 139);\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "}\n"
+                                       "QPushButton::pressed{\n"
+                                       "    background-color: rgb(81, 65, 108);\n"
+                                       "    padding-left:5px;\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "    padding-top:5px;\n"
+                                       "}")
         self.sbackbutton.setObjectName("sbackbutton")
         self.message = QtWidgets.QLabel(self.centralwidget)
         self.message.setGeometry(QtCore.QRect(170, 300, 460, 20))
@@ -127,8 +129,72 @@ class Ui_StudentWindow(object):
         _translate = QtCore.QCoreApplication.translate
         StudentWindow.setWindowTitle(_translate("StudentWindow", "MainWindow"))
         self.sloginbutton.setText(_translate("StudentWindow", "LOGIN"))
-        self.snumberline.setPlaceholderText(_translate("StudentWindow", "STUDENT NUMBER"))
-        self.spasswordline.setPlaceholderText(_translate("StudentWindow", "PASSWORD"))
+        self.snumberline.setPlaceholderText(
+            _translate("StudentWindow", "STUDENT NUMBER"))
+        self.spasswordline.setPlaceholderText(
+            _translate("StudentWindow", "PASSWORD"))
         self.sbackbutton.setText(_translate("StudentWindow", "BACK"))
         self.label_2.setText(_translate("StudentWindow", "TYPING SCHOOL"))
         self.label_3.setText(_translate("StudentWindow", "STUDENT LOGIN"))
+
+        # Login student button icin kodlar, database bağlanıtısı
+        self.sloginbutton.clicked.connect(self.login)
+
+    def login(self):
+        # PostgreSQL bağlantısı için gerekli bilgileri girin
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        # PostgreSQL veritabanına bağlan
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+
+        # SQL sorgusunu hazırla ve çalıştır
+        query = "SELECT * FROM students"
+        cursor.execute(query)
+
+        # Sonuçları al ve print et
+        data = cursor.fetchall()
+        for row in data:
+            print(row)
+        id = self.snumberline.text()
+        password = self.spasswordline.text()
+
+        ####
+        for i in data:
+            if id == str(i[0]) and password == str(i[3]):
+                # Yeni bir QMainWindow örneği oluşturuluyor ve StudentWindow değişkenine atanıyor.
+                self.StudentWindow = QtWidgets.QMainWindow()
+                # Ui_StudentWindow_2 sınıfından bir örneğin oluşturuluyor ve ui değişkenine atanıyor.
+                self.ui = Ui_StudentWindow_2()
+                # Ui_StudentWindow_2 örneği üzerindeki setupUi metodunu çağırarak, StudentWindow örneğini ayarlar.
+                self.ui.setupUi(self.StudentWindow)
+                # Oluşturulan Student penceresini gösterir.
+                self.StudentWindow.show()
+                return
+
+        print('yanlis giris bilgileri')
+
+        # Cursor ve bağlantıyı kapat
+        cursor.close()
+        conn.close()
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    StudentWindow = QtWidgets.QMainWindow()
+    ui = Ui_StudentWindow_2()  # sec
+    ui.setupUi(StudentWindow)
+    StudentWindow.show()
+    sys.exit(app.exec_())

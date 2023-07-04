@@ -9,6 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import psycopg2
+from teacher1 import Ui_MainWindow
 
 
 class Ui_TeacherWindow(object):
@@ -26,19 +28,19 @@ class Ui_TeacherWindow(object):
         font.setPointSize(8)
         self.tloginbutton.setFont(font)
         self.tloginbutton.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
+                                        "    background-color: rgb(143, 106, 185);\n"
+                                        "    color: rgb(245, 240, 218);\n"
+                                        "}\n"
+                                        "QPushButton::hover{\n"
+                                        "    background-color: rgb(115, 80, 139);\n"
+                                        "    color: rgb(245, 240, 218);\n"
+                                        "}\n"
+                                        "QPushButton::pressed{\n"
+                                        "    background-color: rgb(81, 65, 108);\n"
+                                        "    padding-left:5px;\n"
+                                        "    color: rgb(245, 240, 218);\n"
+                                        "    padding-top:5px;\n"
+                                        "}")
         self.tloginbutton.setObjectName("tloginbutton")
         self.usernameline = QtWidgets.QLineEdit(self.centralwidget)
         self.usernameline.setGeometry(QtCore.QRect(270, 200, 271, 31))
@@ -46,7 +48,7 @@ class Ui_TeacherWindow(object):
         font.setPointSize(10)
         self.usernameline.setFont(font)
         self.usernameline.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                        "color:  rgb(143, 106, 185);")
         self.usernameline.setObjectName("usernameline")
         self.tpasswordline = QtWidgets.QLineEdit(self.centralwidget)
         self.tpasswordline.setGeometry(QtCore.QRect(270, 260, 271, 31))
@@ -54,25 +56,25 @@ class Ui_TeacherWindow(object):
         font.setPointSize(10)
         self.tpasswordline.setFont(font)
         self.tpasswordline.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                         "color:  rgb(143, 106, 185);")
         self.tpasswordline.setEchoMode(QtWidgets.QLineEdit.Password)
         self.tpasswordline.setObjectName("tpasswordline")
         self.tbackbutton = QtWidgets.QPushButton(self.centralwidget)
         self.tbackbutton.setGeometry(QtCore.QRect(320, 380, 171, 28))
         self.tbackbutton.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
+                                       "    background-color: rgb(143, 106, 185);\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "}\n"
+                                       "QPushButton::hover{\n"
+                                       "    background-color: rgb(115, 80, 139);\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "}\n"
+                                       "QPushButton::pressed{\n"
+                                       "    background-color: rgb(81, 65, 108);\n"
+                                       "    padding-left:5px;\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "    padding-top:5px;\n"
+                                       "}")
         self.tbackbutton.setObjectName("tbackbutton")
         self.message = QtWidgets.QLabel(self.centralwidget)
         self.message.setGeometry(QtCore.QRect(170, 300, 460, 20))
@@ -130,11 +132,66 @@ class Ui_TeacherWindow(object):
         _translate = QtCore.QCoreApplication.translate
         TeacherWindow.setWindowTitle(_translate("TeacherWindow", "MainWindow"))
         self.tloginbutton.setText(_translate("TeacherWindow", "LOGIN"))
-        self.usernameline.setPlaceholderText(_translate("TeacherWindow", "USER NAME"))
-        self.tpasswordline.setPlaceholderText(_translate("TeacherWindow", "PASSWORD"))
+        self.usernameline.setPlaceholderText(
+            _translate("TeacherWindow", "USER NAME"))
+        self.tpasswordline.setPlaceholderText(
+            _translate("TeacherWindow", "PASSWORD"))
         self.tbackbutton.setText(_translate("TeacherWindow", "BACK"))
         self.label_2.setText(_translate("TeacherWindow", "TYPING SCHOOL"))
         self.label_3.setText(_translate("TeacherWindow", "TEACHER LOGIN"))
+#######################################
+
+   # Login student button icin kodlar, database bağlanıtısı
+        self.tloginbutton.clicked.connect(self.tlogin)
+
+    def tlogin(self):
+        # PostgreSQL bağlantısı için gerekli bilgileri girin
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        # PostgreSQL veritabanına bağlan
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+
+        # SQL sorgusunu hazırla ve çalıştır
+        query = "SELECT * FROM teacher"
+        cursor.execute(query)
+
+        # Sonuçları al ve print et
+        data = cursor.fetchall()
+        for row in data:
+            print(row)
+        id = self.usernameline.text()
+        password = self.tpasswordline.text()
+
+        ####
+        for i in data:
+            if id == str(i[0]) and password == str(i[3]):
+                # Yeni bir QMainWindow örneği oluşturuluyor ve StudentWindow değişkenine atanıyor.
+                self.Ui_MainWindow = QtWidgets.QMainWindow()
+                # Ui_StudentWindow_2 sınıfından bir örneğin oluşturuluyor ve ui değişkenine atanıyor.
+                self.ui = Ui_MainWindow()
+                # Ui_StudentWindow_2 örneği üzerindeki setupUi metodunu çağırarak, StudentWindow örneğini ayarlar.
+                self.ui.setupUi(self.Ui_MainWindow)
+                # Oluşturulan Student penceresini gösterir.
+                self.Ui_MainWindow.show()
+                return
+
+        print('yanlis giris bilgileri')
+
+        # Cursor ve bağlantıyı kapat
+        cursor.close()
+        conn.close()
 
 
 if __name__ == "__main__":

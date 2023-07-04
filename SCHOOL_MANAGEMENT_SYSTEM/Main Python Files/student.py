@@ -9,6 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import psycopg2  # sec
+from loginteacher import Ui_TeacherWindow  # sec
 
 
 class Ui_StudentWindow_2(object):
@@ -69,37 +71,37 @@ class Ui_StudentWindow_2(object):
         font.setPointSize(8)
         self.number_label.setFont(font)
         self.number_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                        "color:  rgb(143, 106, 185);")
         self.number_label.setText("")
         self.number_label.setObjectName("number_label")
         self.surname_label = QtWidgets.QLabel(self.Student_information)
         self.surname_label.setGeometry(QtCore.QRect(340, 120, 225, 30))
         self.surname_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                         "color:  rgb(143, 106, 185);")
         self.surname_label.setText("")
         self.surname_label.setObjectName("surname_label")
         self.birth_label = QtWidgets.QLabel(self.Student_information)
         self.birth_label.setGeometry(QtCore.QRect(340, 160, 225, 30))
         self.birth_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                       "color:  rgb(143, 106, 185);")
         self.birth_label.setText("")
         self.birth_label.setObjectName("birth_label")
         self.gender_label = QtWidgets.QLabel(self.Student_information)
         self.gender_label.setGeometry(QtCore.QRect(340, 200, 225, 30))
         self.gender_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                        "color:  rgb(143, 106, 185);")
         self.gender_label.setText("")
         self.gender_label.setObjectName("gender_label")
         self.name_label = QtWidgets.QLabel(self.Student_information)
         self.name_label.setGeometry(QtCore.QRect(340, 80, 225, 30))
         self.name_label.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);")
+                                      "color:  rgb(143, 106, 185);")
         self.name_label.setText("")
         self.name_label.setObjectName("name_label")
         self.term_widget = QtWidgets.QTableWidget(self.Student_information)
         self.term_widget.setGeometry(QtCore.QRect(50, 270, 661, 238))
         self.term_widget.setStyleSheet("background-color: rgb(245, 240, 218);\n"
-"color:  rgb(143, 106, 185);;")
+                                       "color:  rgb(143, 106, 185);;")
         self.term_widget.setObjectName("term_widget")
         self.term_widget.setColumnCount(3)
         self.term_widget.setRowCount(5)
@@ -124,19 +126,19 @@ class Ui_StudentWindow_2(object):
         self.back_button = QtWidgets.QPushButton(self.Student_information)
         self.back_button.setGeometry(QtCore.QRect(680, 510, 110, 30))
         self.back_button.setStyleSheet("QPushButton{\n"
-"    background-color: rgb(143, 106, 185);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::hover{\n"
-"    background-color: rgb(115, 80, 139);\n"
-"    color: rgb(245, 240, 218);\n"
-"}\n"
-"QPushButton::pressed{\n"
-"    background-color: rgb(81, 65, 108);\n"
-"    padding-left:5px;\n"
-"    color: rgb(245, 240, 218);\n"
-"    padding-top:5px;\n"
-"}")
+                                       "    background-color: rgb(143, 106, 185);\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "}\n"
+                                       "QPushButton::hover{\n"
+                                       "    background-color: rgb(115, 80, 139);\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "}\n"
+                                       "QPushButton::pressed{\n"
+                                       "    background-color: rgb(81, 65, 108);\n"
+                                       "    padding-left:5px;\n"
+                                       "    color: rgb(245, 240, 218);\n"
+                                       "    padding-top:5px;\n"
+                                       "}")
         self.back_button.setObjectName("back_button")
         StudentWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(StudentWindow)
@@ -152,8 +154,10 @@ class Ui_StudentWindow_2(object):
 
     def retranslateUi(self, StudentWindow):
         _translate = QtCore.QCoreApplication.translate
-        StudentWindow.setWindowTitle(_translate("StudentWindow", "Student Info"))
-        self.Student_information.setTitle(_translate("StudentWindow", "Student Information"))
+        StudentWindow.setWindowTitle(
+            _translate("StudentWindow", "Student Info"))
+        self.Student_information.setTitle(
+            _translate("StudentWindow", "Student Information"))
         self.label_2.setText(_translate("StudentWindow", "Number:"))
         self.label_3.setText(_translate("StudentWindow", "Name:"))
         self.label_4.setText(_translate("StudentWindow", "Surname:"))
@@ -178,10 +182,60 @@ class Ui_StudentWindow_2(object):
         self.back_button.setText(_translate("StudentWindow", "BACK"))
 
 
+######
+def login(self):
+    # PostgreSQL bağlantısı için gerekli bilgileri girin
+    host = "localhost"  # PostgreSQL sunucu adresi
+    port = "5432"  # PostgreSQL bağlantı noktası
+    database = "schoolmanagement"  # Veritabanı adı
+    username = "postgres"  # PostgreSQL kullanıcı adı
+    password = "12345"  # PostgreSQL kullanıcı parolası
+    # PostgreSQL veritabanına bağlan
+    conn = psycopg2.connect(
+        host=host,
+        port=port,
+        database=database,
+        user=username,
+        password=password
+    )
+
+    # Veritabanı bağlantısı üzerinden bir cursor oluştur
+    cursor = conn.cursor()
+
+    # SQL sorgusunu hazırla ve çalıştır
+    query = "SELECT * FROM students"
+    cursor.execute(query)
+
+    # Sonuçları al ve print et
+    data = cursor.fetchall()
+    id = self.snumberline.text()
+    password = self.spasswordline.text()
+
+    for i in data:
+        if id == str(i[0]) and password == str(i[3]):
+            # Yeni bir QMainWindow örneği oluşturuluyor ve StudentWindow değişkenine atanıyor.
+            self.StudentWindow = QtWidgets.QMainWindow()
+            # Ui_TeacherWindow sınıfından bir örneğin oluşturuluyor ve ui değişkenine atanıyor.
+            self.ui = Ui_TeacherWindow()
+            # Ui_TeacherWindow örneği üzerindeki setupUi metodunu çağırarak, StudentWindow örneğini ayarlar.
+            self.ui.setupUi(self.StudentWindow)
+            # Oluşturulan Öğretmen penceresini gösterir.
+            self.StudentWindow.show()
+            return
+
+    print('Yanliş giriş bilgileri!')
+
+    # Cursor ve bağlantıyı kapat
+    cursor.close()
+    conn.close()
+
+
+##################
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     StudentWindow = QtWidgets.QMainWindow()
+#     StudentWindow.setObjectName("MainWindow")  # sonradan eklendi
     ui = Ui_StudentWindow_2()
     ui.setupUi(StudentWindow)
     StudentWindow.show()
