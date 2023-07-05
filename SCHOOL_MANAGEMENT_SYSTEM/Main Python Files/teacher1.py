@@ -9,6 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sys
+import psycopg2
 
 
 class Ui_MainWindow(object):
@@ -592,8 +594,67 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(
             self.tab_4), _translate("MainWindow", "Add/Remove Student"))
         self.closebutton.setText(_translate("MainWindow", "CLOSE"))
+#
+
+  # PostgreSQL verilerini al ve UI elemanlarına yazdır
+        self.get_data_from_database()
+
+    def get_data_from_database(self):
+        # PostgreSQL bağlantısı için gerekli bilgileri girin
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        # PostgreSQL veritabanına bağlan
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+
+        # SQL sorgusunu hazırla ve çalıştır
+        query = "SELECT * FROM teacher, students, lessons, classroom"
+        cursor.execute(query)
+
+        # Sonuçları al ve gerekli UI elemanlarına yazdır
+
+        rows = cursor.fetchall()
+        for row in rows:
+            # Verileri aliyoruz
+            student_name = row[0]
+            teacher_name = row[1]
+            gender = row[2]
+            dateofbirth = row[3]
+            midterm = row[4]
+            final_2 = row[5]
+            attendance = row[6]
+
+        try:
+            self.tname_label.setText(str(teacher_name))
+            self.name.setText(str(student_name))
+            self.gender.setText(str(gender))
+            self.birth.setText(str(dateofbirth))
+            self.midterm.setText(str(midterm))
+            self.final_2.setText(str(final_2))
+            self.attendance.setText(str(attendance))
+        except Exception as e:
+            print("Hata:", str(e))
+
+        textTName = self.tname_label1
+        print(textTName)
+
+        # Cursor ve bağlantıyı kapat
+        cursor.close()
+        conn.close()
 
 
+#######################
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

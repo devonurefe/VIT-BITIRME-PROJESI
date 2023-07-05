@@ -160,7 +160,7 @@ class Ui_TeacherWindow(object):
             password=password
         )
 
-        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        # Veritabanı bağlantısı üzerinden bir cursor oluştur
         cursor = conn.cursor()
 
         # SQL sorgusunu hazırla ve çalıştır
@@ -168,26 +168,25 @@ class Ui_TeacherWindow(object):
         cursor.execute(query)
 
         # Sonuçları al ve print et
-        data = cursor.fetchall()
-        for row in data:
+        rows = cursor.fetchall()
+        for row in rows:
             print(row)
-        id = self.usernameline.text()
-        password = self.tpasswordline.text()
+            teacher_name = row[0]
+            password = row[1]
 
-        ####
-        for i in data:
-            if id == str(i[0]) and password == str(i[3]):
-                # Yeni bir QMainWindow örneği oluşturuluyor ve StudentWindow değişkenine atanıyor.
+        teacher_name = self.usernameline.text()
+        password = self.tpasswordline.text()
+        print(row)
+
+        # Giriş bilgilerini kontrol et
+        for row in rows:
+            if teacher_name == self.usernameline.text() and password == self.tpasswordline.text():
                 self.Ui_MainWindow = QtWidgets.QMainWindow()
-                # Ui_StudentWindow_2 sınıfından bir örneğin oluşturuluyor ve ui değişkenine atanıyor.
                 self.ui = Ui_MainWindow()
-                # Ui_StudentWindow_2 örneği üzerindeki setupUi metodunu çağırarak, StudentWindow örneğini ayarlar.
                 self.ui.setupUi(self.Ui_MainWindow)
-                # Oluşturulan Student penceresini gösterir.
                 self.Ui_MainWindow.show()
                 return
-
-        print('yanlis giris bilgileri')
+        print('Yanliş giriş bilgileri')
 
         # Cursor ve bağlantıyı kapat
         cursor.close()
@@ -197,8 +196,8 @@ class Ui_TeacherWindow(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    TeacherWindow = QtWidgets.QMainWindow()
+    MainWindow = QtWidgets.QMainWindow()
     ui = Ui_TeacherWindow()
-    ui.setupUi(TeacherWindow)
-    TeacherWindow.show()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
     sys.exit(app.exec_())

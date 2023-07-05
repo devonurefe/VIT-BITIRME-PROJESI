@@ -182,7 +182,6 @@ class Ui_StudentWindow(object):
                 # Oluşturulan Student penceresini gösterir.
                 self.StudentWindow.show()
                 return
-
         print('yanlis giris bilgileri')
 
         # Cursor ve bağlantıyı kapat
