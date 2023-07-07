@@ -171,20 +171,28 @@ class Ui_TeacherWindow(object):
         rows = cursor.fetchall()
         for row in rows:
             print(row)
-            teacher_name = row[0]
-            password = row[1]
 
-        teacher_name = self.usernameline.text()
+        # logginteacher.py de sinif olusturarak name degerini student sayfasinda yazdirmak
+        nameEntry = self.usernameline.text()
         password = self.tpasswordline.text()
+        #
+
+        print(rows)
+        print(nameEntry)
+        print(password)
+
         print(row)
 
-        # Giriş bilgilerini kontrol et
+        # Giriş bilgilerini kontrol et yanlis bilgileri kontrol edip giris yapiyor
         for row in rows:
-            if teacher_name == self.usernameline.text() and password == self.tpasswordline.text():
+            if nameEntry == str(row[1]) and password == str(row[2]):
                 self.Ui_MainWindow = QtWidgets.QMainWindow()
                 self.ui = Ui_MainWindow()
                 self.ui.setupUi(self.Ui_MainWindow)
                 self.Ui_MainWindow.show()
+                # Kullanıcı adını tname_label etiketine yazdır
+                self.ui.tname_label.setText(nameEntry)
+
                 return
         print('Yanliş giriş bilgileri')
 

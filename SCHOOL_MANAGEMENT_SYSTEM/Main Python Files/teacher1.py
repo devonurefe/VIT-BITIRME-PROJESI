@@ -11,10 +11,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import psycopg2
+# from loginteacher import Ui_TeacherWindow
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
         MainWindow.setMinimumSize(QtCore.QSize(800, 600))
@@ -594,7 +596,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(
             self.tab_4), _translate("MainWindow", "Add/Remove Student"))
         self.closebutton.setText(_translate("MainWindow", "CLOSE"))
-#
+###########################################################################
+        # init metoduna eklenecek
+        self.nameEntry = None
 
   # PostgreSQL verilerini al ve UI elemanlarına yazdır
         self.get_data_from_database()
@@ -619,36 +623,41 @@ class Ui_MainWindow(object):
         cursor = conn.cursor()
 
         # SQL sorgusunu hazırla ve çalıştır
-        query = "SELECT * FROM teacher, students, lessons, classroom"
+        query = "SELECT teacher.teacher_name, students.student_name, lessons.lesson_name FROM teacher, students, lessons"
         cursor.execute(query)
-
         # Sonuçları al ve gerekli UI elemanlarına yazdır
 
         rows = cursor.fetchall()
         for row in rows:
             # Verileri aliyoruz
-            student_name = row[0]
-            teacher_name = row[1]
-            gender = row[2]
-            dateofbirth = row[3]
-            midterm = row[4]
-            final_2 = row[5]
-            attendance = row[6]
+            teacher_name = row[0]
+            student_name = row[1]
+            lesson_name = row[2]
+            self.lesson_combo.addItem(lesson_name)
+            self.lesson_combo_2.addItem(lesson_name)
+            self.lesson_combo_6.addItem(lesson_name)
+            self.lesson_combo_4.addItem(lesson_name)
+            self.lesson_combo_5.addItem(lesson_name)
+            self.student_combo.addItem(student_name)
+            self.student_combo_3.addItem(student_name)
+            self.student_combo_4.addItem(student_name)
 
+        # sName = self.name.text()
+        # sGender = self.gender.text()
+        # sBirth = self.birth.text()
         try:
-            self.tname_label.setText(str(teacher_name))
-            self.name.setText(str(student_name))
-            self.gender.setText(str(gender))
-            self.birth.setText(str(dateofbirth))
-            self.midterm.setText(str(midterm))
-            self.final_2.setText(str(final_2))
-            self.attendance.setText(str(attendance))
+            # loginden gelen teacher isimini yazdirmak icin kullaniliyor
+            self.tname_label.setText(str(self.nameEntry))
+        #     self.name.setText(str(self.Sname))
+        #     self.gender.setText(str(self.Sgender))
+        #     self.birth.setText(str(self.Sbirth))
+
         except Exception as e:
             print("Hata:", str(e))
 
-        textTName = self.tname_label1
-        print(textTName)
-
+        # print(sName)
+        # print(sGender)
+        # print(sBirth)
         # Cursor ve bağlantıyı kapat
         cursor.close()
         conn.close()
