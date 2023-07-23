@@ -224,6 +224,9 @@ QPushButton::pressed{
        <string notr="true">background-color: rgb(245, 240, 218);
 color:  rgb(143, 106, 185);</string>
       </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>240</number>
       </attribute>
@@ -1163,7 +1166,7 @@ QPushButton::pressed{
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TeacherWindow</class>
- <widget class="QMainWindow" name="TeacherWindow">
+ <class>StudentWindow</class>
+ <widget class="QMainWindow" name="StudentWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,7 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="tloginbutton">
+   <widget class="QPushButton" name="sloginbutton">
     <property name="geometry">
      <rect>
       <x>320</x>
@@ -37,11 +37,6 @@
       <width>171</width>
       <height>28</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>8</pointsize>
-     </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
@@ -63,7 +58,7 @@ QPushButton::pressed{
      <string>LOGIN</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="usernameline">
+   <widget class="QLineEdit" name="snumberline">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -82,10 +77,10 @@ QPushButton::pressed{
 color:  rgb(143, 106, 185);</string>
     </property>
     <property name="placeholderText">
-     <string>USER NAME</string>
+     <string>STUDENT NUMBER</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="tpasswordline">
+   <widget class="QLineEdit" name="spasswordline">
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -110,7 +105,7 @@ color:  rgb(143, 106, 185);</string>
      <string>PASSWORD</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="tbackbutton">
+   <widget class="QPushButton" name="sbackbutton">
     <property name="geometry">
      <rect>
       <x>320</x>
@@ -165,22 +160,6 @@ QPushButton::pressed{
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>800</width>
-      <height>600</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(172, 223, 230);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
@@ -223,20 +202,50 @@ QPushButton::pressed{
      <string notr="true">color:  rgb(143, 106, 185);</string>
     </property>
     <property name="text">
-     <string>TEACHER LOGIN</string>
+     <string>STUDENT LOGIN</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-30</y>
+      <width>800</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(172, 223, 230);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>200</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
    <zorder>label</zorder>
-   <zorder>tloginbutton</zorder>
-   <zorder>usernameline</zorder>
-   <zorder>tpasswordline</zorder>
-   <zorder>tbackbutton</zorder>
+   <zorder>sloginbutton</zorder>
+   <zorder>snumberline</zorder>
+   <zorder>spasswordline</zorder>
+   <zorder>sbackbutton</zorder>
    <zorder>message</zorder>
    <zorder>label_2</zorder>
    <zorder>label_3</zorder>
+   <zorder>pushButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

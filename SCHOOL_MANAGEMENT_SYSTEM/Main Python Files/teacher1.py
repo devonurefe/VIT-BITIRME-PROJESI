@@ -9,8 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
 import sys
 import psycopg2
+from datetime import date
+
 # from loginteacher import Ui_TeacherWindow
 
 
@@ -114,7 +117,7 @@ class Ui_MainWindow(object):
                                          "color:  rgb(143, 106, 185);")
         self.lesson_widget.setObjectName("lesson_widget")
         self.lesson_widget.setColumnCount(3)
-        self.lesson_widget.setRowCount(5)
+        self.lesson_widget.setRowCount(25)
         item = QtWidgets.QTableWidgetItem()
         self.lesson_widget.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -599,18 +602,29 @@ class Ui_MainWindow(object):
 ###########################################################################
         # init metoduna eklenecek
         self.nameEntry = None
+        self.idFin = None
+        self.teacherNameRead = None
 
-  # PostgreSQL verilerini al ve UI elemanlarına yazdır
+        self.add_button.clicked.connect(self.add_button_clicked)
+        self.remove_button_2.clicked.connect(self.remove_lesson)
+        self.ok_button.clicked.connect(self.showedStudent)
         self.get_data_from_database()
 
+    # PostgreSQL verilerini al ve UI elemanlarına yazdır
+
     def get_data_from_database(self):
+
+        # loginden gelen teacher isimini yazdirmak icin kullaniliyor
+        with open("nameTeacher.txt", "r") as file:
+            teacherNameRead = file.read()
+            print("Teacher name su sekilde belirlenmistir: ", teacherNameRead)
+
         # PostgreSQL bağlantısı için gerekli bilgileri girin
         host = "localhost"  # PostgreSQL sunucu adresi
         port = "5432"  # PostgreSQL bağlantı noktası
         database = "schoolmanagement"  # Veritabanı adı
         username = "postgres"  # PostgreSQL kullanıcı adı
         password = "12345"  # PostgreSQL kullanıcı parolası
-        # PostgreSQL veritabanına bağlan
         conn = psycopg2.connect(
             host=host,
             port=port,
@@ -621,46 +635,319 @@ class Ui_MainWindow(object):
 
         # # Veritabanı bağlantısı üzerinden bir cursor oluştur
         cursor = conn.cursor()
+        conn.commit()
+        self.teacherNameRead = teacherNameRead
+        cursor.execute(""" SELECT t.teacher_name, t."teacherID"
+                            FROM teacher AS t
+                            WHERE t.teacher_name = %s;""", (teacherNameRead,))
+        idTeacher = cursor.fetchall()
+        for t in idTeacher:
+            print("teacherlar:", t)
+            idFin = t[1]
+        print("idFin:", idFin)
+        self.idFin = idFin
+        ###
+        cursor.execute("""
+                            SELECT t.teacher_name, l.lesson_name, c.class_name, ls.midterm, ls.final, ls.attendance, c.capacity
+                            FROM teacher AS t
+                            JOIN lesson_teacher AS lt ON t."teacherID" = lt."teacherID"
+                            JOIN lessons AS l ON lt."lessonID" = l."lessonID"
+                            JOIN classroom AS c ON l."classID" = c."classID"
+                            JOIN lesson_student AS ls ON l."lessonID" = ls."lessonID"
+                            WHERE t.teacher_name = %s;""", (teacherNameRead,))
+        lessons_taken = cursor.fetchall()
 
-        # SQL sorgusunu hazırla ve çalıştır
-        query = "SELECT teacher.teacher_name, students.student_name, lessons.lesson_name FROM teacher, students, lessons"
-        cursor.execute(query)
-        # Sonuçları al ve gerekli UI elemanlarına yazdır
+        # label_2'ya mevcut dersleri ekle
+        for i, row in enumerate(lessons_taken):
+            print("lessonlar: ", row)
 
-        rows = cursor.fetchall()
-        for row in rows:
-            # Verileri aliyoruz
-            teacher_name = row[0]
-            student_name = row[1]
-            lesson_name = row[2]
+            lesson = row[1]  # Lesson name
+            className = row[2]  # className
+            capacity = row[6]  # capacity
+
+            # Set the corresponding items in the table widget
+            item_lesson = QTableWidgetItem(
+                lesson)
+            item_className = QTableWidgetItem(
+                str(className))
+            item_capacity = QTableWidgetItem(
+                str(capacity))
+
+            # Set the items in the correct columns
+            self.lesson_widget.setItem(i, 2, item_capacity)
+            self.lesson_widget.setItem(i, 1, item_className)
+            self.lesson_widget.setItem(i, 0, item_lesson)
+
+        # Teacher in vermedigi dersler icin query olusturuluyor
+
+        cursor.execute(''' SELECT lesson_name, teacher_name, capacity 
+                                FROM lessons 
+                                JOIN lesson_teacher ON lesson_teacher."lessonID" = lessons."lessonID"  
+                                JOIN teacher ON lesson_teacher."teacherID" = teacher."teacherID" 
+                                JOIN classroom ON classroom."classID" = lessons."classID"
+                                EXCEPT
+                                SELECT lesson_name, teacher_name, capacity 
+                                FROM lessons 
+                                JOIN lesson_teacher ON lesson_teacher."lessonID" = lessons."lessonID"   
+                                JOIN teacher ON lesson_teacher."teacherID" = teacher."teacherID" 
+                                JOIN classroom ON classroom."classID" = lessons."classID"
+                                WHERE teacher.teacher_name =  %s;''', (teacherNameRead,))
+        lessons_not_taken = cursor.fetchall()
+
+        # lesson_combo'ya dersleri ekle
+        for lesson in lessons_taken:
+            print("yeni: ", lesson)
+            lesAdd = lesson[1]
+            self.lesson_combo_6.addItem(lesAdd)
+        # buradada verilmeyen dersleri ekle
+        for lesson1 in lessons_not_taken:
+            lesson_name = lesson1[0]
             self.lesson_combo.addItem(lesson_name)
-            self.lesson_combo_2.addItem(lesson_name)
-            self.lesson_combo_6.addItem(lesson_name)
-            self.lesson_combo_4.addItem(lesson_name)
-            self.lesson_combo_5.addItem(lesson_name)
-            self.student_combo.addItem(student_name)
-            self.student_combo_3.addItem(student_name)
-            self.student_combo_4.addItem(student_name)
 
-        # sName = self.name.text()
-        # sGender = self.gender.text()
-        # sBirth = self.birth.text()
-        try:
-            # loginden gelen teacher isimini yazdirmak icin kullaniliyor
-            self.tname_label.setText(str(self.nameEntry))
-        #     self.name.setText(str(self.Sname))
-        #     self.gender.setText(str(self.Sgender))
-        #     self.birth.setText(str(self.Sbirth))
+    # add_button_clicked adlı işlevi tanımlayın ve ilgili işlemleri ######################################
+    def add_button_clicked(self):
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
 
-        except Exception as e:
-            print("Hata:", str(e))
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+        conn.commit()
+        selected_lesson = self.lesson_combo.currentText()
+        print("lessadasd: ", selected_lesson)
+    # Dersi label_2 widgetından silme işlemi
+        index = self.lesson_combo.findText(selected_lesson)
+        if index != -1:
+            self.lesson_combo.removeItem(index)
+        self.lesson_combo_6.addItem(selected_lesson)
 
-        # print(sName)
-        # print(sGender)
-        # print(sBirth)
-        # Cursor ve bağlantıyı kapat
-        cursor.close()
-        conn.close()
+    # Veritabanından seçilen dersin eklenmesi işlemi
+
+    # Combobox tan secilen dersin lessonid sini databaseden alıyoruz
+
+        cursor.execute('''SELECT "lessonID" 
+                               FROM lessons
+                               WHERE lessons.lesson_name = %s;''', (selected_lesson,))
+        lesson_selected_id = cursor.fetchall()
+        for i in lesson_selected_id:
+            print("i ler: ", i)
+
+    # Secilen dersi database de ekliyoruz ###########
+
+        cursor.execute('''INSERT INTO  lesson_teacher ("lessonID", "teacherID" )
+                                VALUES (%s,%s)''', (lesson_selected_id[0], self.idFin))
+        conn.commit()
+
+        # Clear the combobox selection
+        self.lesson_combo.setCurrentIndex(-1)
+
+    # Burada veritabanına ilgili sorguyu kullanarak silme işlemini gerçekleştirin
+    # ...
+
+    def remove_lesson(self):
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+        conn.commit()
+        # Get the selected lesson from the combobox
+        selected_lesson = self.lesson_combo_6.currentText()
+
+        self.lesson_widget.clearContents()  # Qwidget tabel tamamen temizleniyor
+
+        # Tablewidget temizleyip yeniden yukleme yapmak icin comboboxtan secilen ders harici diger teacher_lesson bilgileri r################
+
+        cursor.execute(''' SELECT t.teacher_name, l.lesson_name, c.class_name, ls.midterm, ls.final, ls.attendance, c.capacity
+                            FROM teacher AS t
+                            JOIN lesson_teacher AS lt ON t."teacherID" = lt."teacherID"
+                            JOIN lessons AS l ON lt."lessonID" = l."lessonID"
+                            JOIN classroom AS c ON l."classID" = c."classID"
+                            JOIN lesson_student AS ls ON l."lessonID" = ls."lessonID"
+                            WHERE t.teacher_name <> %s;''', (selected_lesson,))
+
+        # Sorgu sonuçlarını al
+        lessons_taken = cursor.fetchall()
+        ## dersler qwidget table a yazdiriliyor###############################################################################
+        # label_2'ya mevcut dersleri ekle
+        for i, row in enumerate(lessons_taken):
+            print("lessonlar: ", row)
+
+            lesson = row[1]  # Lesson name
+            className = row[2]  # className
+            capacity = row[6]  # capacity
+
+            # Set the corresponding items in the table widget
+            item_lesson = QTableWidgetItem(
+                lesson)
+            item_className = QTableWidgetItem(
+                str(className))
+            item_capacity = QTableWidgetItem(
+                str(capacity))
+
+            # Set the items in the correct columns
+            self.lesson_widget.setItem(i, 2, item_capacity)
+            self.lesson_widget.setItem(i, 1, item_className)
+            self.lesson_widget.setItem(i, 0, item_lesson)
+
+        # Remove the selected lesson from combo
+
+        index = self.lesson_combo_6.findText(selected_lesson)
+        if index != -1:
+            self.lesson_combo_6.removeItem(index)
+        self.lesson_combo_6.addItem(selected_lesson)
+
+        # Combobox tan secilen dersin lessonid sini databaseden alıyoruz
+
+        cursor.execute('''SELECT "lessonID" 
+                               FROM lessons
+                               WHERE lessons.lesson_name = %s;''', (selected_lesson,))
+        lesson_selected_id = cursor.fetchall()
+
+        # Secilen dersin database den siliyoruz
+
+        cursor.execute('''
+                       DELETE 
+                       FROM 
+                       lesson_teacher 
+                       WHERE "lessonID" = %s and "teacherID" = %s''', (lesson_selected_id[0], self.idFin))
+
+        conn.commit()
+
+
+##### SHOW STUDENT TAB  ###########################################
+
+        self.showStudentTab()
+
+    def showStudentTab(self):
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+        conn.commit()
+        # self.teacherNameRead = teacherNameRead
+
+        cursor.execute('''SELECT lesson_name
+                            FROM teacher AS t
+                            JOIN lesson_teacher AS lt ON t."teacherID" = lt."teacherID"
+                            JOIN lessons AS l ON lt."lessonID" = l."lessonID"
+                            JOIN classroom AS c ON l."classID" = c."classID"
+                            JOIN lesson_student AS ls ON l."lessonID" = ls."lessonID"
+                            WHERE teacher.teacher_name = %s ''', (self.teacherNameRead,))
+        conn.commit()
+        lessonShow = cursor.fetchall()
+
+        for s in lessonShow:
+            print("studentler: ", s)
+            lesAdd = s[0]
+            self.lesson_combo_2.addItem(lesAdd)
+        ###
+        self.showedStudent()
+
+    def showedStudent(self):
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        conn = psycopg2.connect(
+            host=host,
+            port=port,
+            database=database,
+            user=username,
+            password=password
+        )
+
+        # # Veritabanı bağlantısı üzerinden bir cursor oluştur
+        cursor = conn.cursor()
+        conn.commit()
+        # Clear the existing content of student_combo
+        self.student_combo.clear()
+        # Get the selected lesson from the combobox
+        selected_lesson = self.lesson_combo_2.currentText()
+
+        cursor.execute("""
+                            SELECT student_name
+                            FROM lesson_student
+                            JOIN lessons ON lesson_student."lessonID" = lessons."lessonID"
+                            JOIN students ON lesson_student."studentID" = students."studentID"
+                            WHERE lessons.lesson_name = %s """, (selected_lesson,))
+
+        # Sorgu sonuçlarını al
+        students = cursor.fetchall()
+        for su in students:
+            print("sular:", su)
+        # Öğrenci isimlerini student_combo QLabel'ine yazdır
+        student_names = [student[0] for student in students]
+        student_text = "\n".join(student_names)
+        self.student_combo.addItem(str(student_text))
+        print(student_text)
+
+        # # show student information
+        cursor.execute(''' SELECT s.student_name, s.student_surname, s.gender, s.dateofbirth, l.lesson_name, ls.midterm, ls.final, l."lessonID", ls.attendance     
+                           FROM students s 
+                           JOIN lesson_student ls ON s."studentID" = ls."studentID"   
+                           JOIN lessons l ON ls."lessonID" = l."lessonID" 
+                           WHERE s."student_name" = %s;''', (student_text,))
+
+        results = cursor.fetchall()
+        birth_date = date(2022, 1, 15)
+        # birth_date'i bir dizeye dönüştürme
+        birth_date_str = birth_date.strftime('%Y-%m-%d')
+
+        for row in results:
+            print("sonuc:", row)
+
+            self.student_combo.addItem(student_text)
+            self.name.setText(str(row[0]))
+            self.birth.setText(birth_date_str)
+            self.gender.setText(str(row[2]))
+            self.midterm.setText(str(row[5]))
+            self.final_2.setText(str(row[6]))
+            self.attendance.setText(str(row[7]))
+
+
+#####################################################################################################
+    # Cursor ve bağlantıyı kapat
+
+
+    def closeEvent(self, event):
+        # Close the cursor and connection
+        self.cursor.close()
+        self.conn.close()
+        event.accept()
+
+        print("Veritabani oluşturuldu ve bağlanti yapildi.")
 
 
 #######################

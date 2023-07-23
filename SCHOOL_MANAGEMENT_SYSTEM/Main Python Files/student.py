@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import psycopg2  # sec
-from loginteacher import Ui_TeacherWindow  # sec
+# from loginstudent import Ui_StudentWindow  # sec
 
 
 class Ui_StudentWindow_2(object):
@@ -180,54 +180,91 @@ class Ui_StudentWindow_2(object):
         item = self.term_widget.horizontalHeaderItem(2)
         item.setText(_translate("StudentWindow", "Final"))
         self.back_button.setText(_translate("StudentWindow", "BACK"))
+        self.id = None
+  # PostgreSQL verilerini al ve UI elemanlarına yazdır
+        self.get_database()
 
+    def get_database(self):
 
-######
-def login(self):
-    # PostgreSQL bağlantısı için gerekli bilgileri girin
-    host = "localhost"  # PostgreSQL sunucu adresi
-    port = "5432"  # PostgreSQL bağlantı noktası
-    database = "schoolmanagement"  # Veritabanı adı
-    username = "postgres"  # PostgreSQL kullanıcı adı
-    password = "12345"  # PostgreSQL kullanıcı parolası
-    # PostgreSQL veritabanına bağlan
-    conn = psycopg2.connect(
-        host=host,
-        port=port,
-        database=database,
-        user=username,
-        password=password
-    )
+        # # loginstudent.py den gelen idnin buraya yazilmasi
+        with open("student_id.txt", "r") as file:
+            student_id = file.read()
+            print("Studentid su sekilde belirlenmistir: ", student_id)
 
-    # Veritabanı bağlantısı üzerinden bir cursor oluştur
-    cursor = conn.cursor()
+        # Veritabanı bağlantı bilgileri
+        host = "localhost"  # PostgreSQL sunucu adresi
+        port = "5432"  # PostgreSQL bağlantı noktası
+        database = "schoolmanagement"  # Veritabanı adı
+        username = "postgres"  # PostgreSQL kullanıcı adı
+        password = "12345"  # PostgreSQL kullanıcı parolası
+        try:
+            # Yeni veritabanı bağlantısı
+            connection = psycopg2.connect(
+                host=host,
+                port=port,
+                database=database,
+                user=username,
+                password=password
+            )
 
-    # SQL sorgusunu hazırla ve çalıştır
-    query = "SELECT * FROM students"
-    cursor.execute(query)
+            # Veritabanı işlemleri burada gerçekleştirilir
+            cursor = connection.cursor()
+            connection.commit()
 
-    # Sonuçları al ve print et
-    data = cursor.fetchall()
-    id = self.snumberline.text()
-    password = self.spasswordline.text()
+            # SQL sorgusunu çalıştırma
+            cursor.execute(''' SELECT s.student_name, s.student_surname, s.gender, s.dateofbirth, l.lesson_name, ls.midterm, ls.final, l."lessonID"      
+                           FROM students s 
+                           JOIN lesson_student ls ON s."studentID" = ls."studentID"   
+                           JOIN lessons l ON ls."lessonID" = l."lessonID" 
+                           WHERE s."studentID" = %s;''', (student_id,))
 
-    for i in data:
-        if id == str(i[0]) and password == str(i[3]):
-            # Yeni bir QMainWindow örneği oluşturuluyor ve StudentWindow değişkenine atanıyor.
-            self.StudentWindow = QtWidgets.QMainWindow()
-            # Ui_TeacherWindow sınıfından bir örneğin oluşturuluyor ve ui değişkenine atanıyor.
-            self.ui = Ui_TeacherWindow()
-            # Ui_TeacherWindow örneği üzerindeki setupUi metodunu çağırarak, StudentWindow örneğini ayarlar.
-            self.ui.setupUi(self.StudentWindow)
-            # Oluşturulan Öğretmen penceresini gösterir.
-            self.StudentWindow.show()
-            return
+            # Sonuçları almak
+            results = cursor.fetchall()
+            for i, row in enumerate(results):
+                print("sonuc:", row)
 
-    print('Yanliş giriş bilgileri!')
+                self.number_label.setText(student_id)
+                self.name_label.setText(str(row[0]))
+                self.surname_label.setText(str(row[1]))
+                self.birth_label.setText(row[2])
+                self.gender_label.setText(str(row[3]))
 
-    # Cursor ve bağlantıyı kapat
-    cursor.close()
-    conn.close()
+                lesson = row[4]  # Lesson name
+                midterm_data = row[5]  # Midterm data
+                final_exam_data = row[6]  # Final exam data
+
+                # Set the corresponding items in the table widget
+                item_lesson = QtWidgets.QTableWidgetItem(lesson)
+                item_midterm = QtWidgets.QTableWidgetItem(str(midterm_data))
+                item_final_exam = QtWidgets.QTableWidgetItem(
+                    str(final_exam_data))
+
+                # Set the items in the correct columns
+                self.term_widget.setItem(i, 0, item_lesson)
+                self.term_widget.setItem(i, 1, item_midterm)
+                self.term_widget.setItem(i, 2, item_final_exam)
+
+            # Sonuçları işleme
+            # for row in results:
+            #     # Her bir satırdaki verileri al
+            #     studentID, student_name, student_surname, gender, dateofbirth, midterm, final, lessonID, lesson_name = row
+
+            #     # İşlem yapmak veya sonuçları kullanmak için burada kodunuzu yazın
+            #     print("-------------------------------------------")
+            #     print(
+            #         f"Student ID: {studentID}, Name: {student_name}, Surname: {student_surname}, Gender: {gender}, Date of Birth: {dateofbirth}")
+            #     print(f"Midterm: {midterm}, Final: {final}")
+            #     print(f"Lesson ID: {lessonID}, Lesson Name: {lesson_name}")
+            #     print("-------------------------------------------")
+
+            # Bağlantıyı kapatın
+            cursor.close()
+            connection.close()
+
+            print("Veritabani oluşturuldu ve bağlanti yapildi.")
+
+        except (Exception, psycopg2.Error) as error:
+            print("Veritabanina bağlanirken veya oluştururken hata oluştu:", error)
 
 
 ##################
@@ -235,7 +272,6 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     StudentWindow = QtWidgets.QMainWindow()
-#     StudentWindow.setObjectName("MainWindow")  # sonradan eklendi
     ui = Ui_StudentWindow_2()
     ui.setupUi(StudentWindow)
     StudentWindow.show()

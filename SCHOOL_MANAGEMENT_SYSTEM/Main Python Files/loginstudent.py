@@ -164,23 +164,31 @@ class Ui_StudentWindow(object):
         cursor.execute(query)
 
         # Sonuçları al ve print et
-        data = cursor.fetchall()
-        for row in data:
+        rows = cursor.fetchall()
+        for row in rows:
             print(row)
+
         id = self.snumberline.text()
         password = self.spasswordline.text()
 
+        # loginstudent.py de olusan id girisli ogrencinin verilerinin bir dosyaya yazilmasi
+        with open("student_id.txt", "w") as file:
+            file.write(self.snumberline.text())
+
         ####
-        for i in data:
-            if id == str(i[0]) and password == str(i[3]):
+        for row in rows:
+            if id == str(row[0]) and password == str(row[3]):
                 # Yeni bir QMainWindow örneği oluşturuluyor ve StudentWindow değişkenine atanıyor.
-                self.StudentWindow = QtWidgets.QMainWindow()
+                self.Ui_StudentWindow_2 = QtWidgets.QMainWindow()
                 # Ui_StudentWindow_2 sınıfından bir örneğin oluşturuluyor ve ui değişkenine atanıyor.
                 self.ui = Ui_StudentWindow_2()
                 # Ui_StudentWindow_2 örneği üzerindeki setupUi metodunu çağırarak, StudentWindow örneğini ayarlar.
-                self.ui.setupUi(self.StudentWindow)
+                self.ui.setupUi(self.Ui_StudentWindow_2)
                 # Oluşturulan Student penceresini gösterir.
-                self.StudentWindow.show()
+                self.Ui_StudentWindow_2.show()
+                # HANGI OGRENCI GIRIS YAPMISSSA ONUN VERILERINI TUTUYORUZ
+                self.ui.number_label.setText(id)
+
                 return
         print('yanlis giris bilgileri')
 
@@ -193,7 +201,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     StudentWindow = QtWidgets.QMainWindow()
-    ui = Ui_StudentWindow_2()  # sec
+    ui = Ui_StudentWindow()  # sec
     ui.setupUi(StudentWindow)
     StudentWindow.show()
     sys.exit(app.exec_())

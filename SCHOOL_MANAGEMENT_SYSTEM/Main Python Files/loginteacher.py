@@ -167,7 +167,6 @@ class Ui_TeacherWindow(object):
         query = "SELECT * FROM teacher"
         cursor.execute(query)
 
-        # Sonuçları al ve print et
         rows = cursor.fetchall()
         for row in rows:
             print(row)
@@ -175,13 +174,10 @@ class Ui_TeacherWindow(object):
         # logginteacher.py de sinif olusturarak name degerini student sayfasinda yazdirmak
         nameEntry = self.usernameline.text()
         password = self.tpasswordline.text()
-        #
 
-        print(rows)
-        print(nameEntry)
-        print(password)
-
-        print(row)
+        # loginstudent.py de olusan id girisli ogrencinin verilerinin bir dosyaya yazilmasi
+        with open("nameTeacher.txt", "w") as file:
+            file.write(self.usernameline.text())
 
         # Giriş bilgilerini kontrol et yanlis bilgileri kontrol edip giris yapiyor
         for row in rows:
